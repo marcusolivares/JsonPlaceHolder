@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "71a42b5b-9627-45a7-9e22-d23deaa5cd4a",
+		"name": "JsonPlaceHolder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "READ posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 - OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//Utilities\r",
+							"const jsonResponse = pm.response.json();\r",
+							"console.log(Object.values(jsonResponse));\r",
+							"today = new Date();\r",
+							"new Date(today.valueOf() + today.getTimezoneOffset() * 60000);\r",
+							"\r",
+							"//Validating the response body\r",
+							"pm.test(\"Read posts is done and the response body variables validated\", function(){     \r",
+							"    /* I know that this is somewhat hardcoded because it's expected that the original GET page isn't changed. A more realistic approach would be doing a GET first (or knowing exactly what should be returned), saving the data, and then validating a second GET doing a comparison of this data.\r",
+							"    Nonetheless, this is a validation to check if the ids are in the expected range and if the other data is a string\r",
+							"    */\r",
+							"    const mainArray = Object.values(jsonResponse);\r",
+							"    mainArray.forEach((subArray) => {  Object.entries(subArray).forEach(([key, value]) => {    \r",
+							"        if ((`${key}`) == (\"userId\")) {\r",
+							"            pm.expect(parseInt(`${value}`)).to.be.above(0);\r",
+							"            pm.expect(parseInt(`${value}`)).to.be.below(11);\r",
+							"        } else if ((`${key}`) == (\"id\")) {\r",
+							"            pm.expect(parseInt(`${value}`)).to.be.above(0);\r",
+							"            pm.expect(parseInt(`${value}`)).to.be.below(101);\r",
+							"        } else if ((`${key}`) == (\"title\") || (`${key}`) == (\"body\")) {\r",
+							"            pm.expect(`${value}`).to.be.a('string');\r",
+							"        } \r",
+							"      }); });\r",
+							"});\r",
+							"pm.test(\"Verifying the body size\", function(){\r",
+							"    pm.expect(Object.keys(jsonResponse).length).to.eql(100);\r",
+							"});\r",
+							"\r",
+							"//Validating the response headers\r",
+							"pm.test(\"Verifying the static response headers\", function(){\r",
+							"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"    pm.response.to.be.header(\"Transfer-Encoding\", \"chunked\");\r",
+							"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+							"    pm.response.to.be.header(\"x-powered-by\", \"Express\");\r",
+							"    pm.response.to.be.header(\"x-ratelimit-limit\", \"1000\");\r",
+							"    pm.response.to.be.header(\"vary\", \"Origin, Accept-Encoding\");\r",
+							"    pm.response.to.be.header(\"access-control-allow-credentials\", \"true\");\r",
+							"    pm.response.to.be.header(\"cache-control\", \"max-age=43200\");\r",
+							"    pm.response.to.be.header(\"pragma\", \"no-cache\");\r",
+							"    pm.response.to.be.header(\"expires\", \"-1\");\r",
+							"    pm.response.to.be.header(\"x-content-type-options\", \"nosniff\");\r",
+							"    pm.response.to.be.header(\"etag\", \"W/\\\"6b80-Ybsq/K6GwwqrYkAsFxqDXGC7DoM\\\"\");\r",
+							"    pm.response.to.be.header(\"via\", \"1.1 vegur\");\r",
+							"    pm.response.to.be.header(\"CF-Cache-Status\", \"HIT\");\r",
+							"    pm.response.to.be.header(\"Expect-CT\", \"max-age=604800, report-uri=\\\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\\\"\");\r",
+							"    pm.response.to.be.header(\"NEL\", \"{\\\"success_fraction\\\":0,\\\"report_to\\\":\\\"cf-nel\\\",\\\"max_age\\\":604800}\");\r",
+							"    pm.response.to.be.header(\"Server\", \"cloudflare\");\r",
+							"    pm.response.to.be.header(\"Content-Encoding\", \"br\");\r",
+							"    pm.response.to.be.header(\"alt-svc\", \"h3=\\\":443\\\"; ma=86400, h3-29=\\\":443\\\"; ma=86400, h3-28=\\\":443\\\"; ma=86400, h3-27=\\\":443\\\"; ma=86400\");\r",
+							"});\r",
+							"pm.test(\"Verifying the dynamic response headers\", function(){\r",
+							"    /*For some of the headers below the data changes a lot and what's really expected to be returned isn't defined. Thus, I set only the name of these headers \r",
+							"    being checked for now due to time restrictions. Regarding the header of Date, I believe what was left to do  was only convert the assertion to the same data type*/\r",
+							"\r",
+							"    //pm.response.to.be.header(\"Date\", today);\r",
+							"    pm.expect(pm.response.headers.get('x-ratelimit-remaining')).to.be.oneOf([\"991\", \"992\", \"993\", \"994\", \"995\", \"996\", \"997\", \"998\", \"999\"]);\r",
+							"    pm.response.to.have.header(\"x-ratelimit-reset\");\r",
+							"    pm.response.to.have.header(\"Age\");\r",
+							"    pm.response.to.have.header(\"Report-To\");\r",
+							"    pm.response.to.have.header(\"CF-RAY\");\r",
+							"});\r",
+							"pm.test(\"Verifying the response headers size\", function(){\r",
+							"    var headerSize=0;\r",
+							"    for (var count in responseHeaders) {\r",
+							"        if(responseHeaders.hasOwnProperty(count))\r",
+							"            headerSize += 1;\r",
+							"    }\r",
+							"    pm.expect(headerSize).to.eql(25);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Validating the response code\r",
+							"pm.test(\"Status code is 201 - Created\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"//Utilities\r",
+							"const jsonResponse = pm.response.json();\r",
+							"console.log(jsonResponse);\r",
+							"today = new Date();\r",
+							"new Date(today.valueOf() + today.getTimezoneOffset() * 60000);\r",
+							"\r",
+							"//Validating the response body\r",
+							"pm.test(\"New post is created and the response body variables validated\", function(){     \r",
+							"    pm.expect(jsonResponse.userId).to.eql(pm.environment.get(\"userId\"));\r",
+							"    pm.expect(jsonResponse.id).to.eql(pm.environment.get(\"id\"));\r",
+							"    pm.expect(jsonResponse.title).to.eql(pm.environment.get(\"title\"));\r",
+							"    pm.expect(jsonResponse.body).to.eql(pm.environment.get(\"body\"));\r",
+							"});\r",
+							"pm.test(\"Verifying the response body size\", function(){\r",
+							"    pm.expect(Object.keys(jsonResponse).length).to.eql(4);\r",
+							"});\r",
+							"\r",
+							"//Validating the response headers\r",
+							"pm.test(\"Verifying the static response headers\", function(){\r",
+							"    pm.response.to.be.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+							"    pm.response.to.be.header(\"Connection\", \"keep-alive\");\r",
+							"    pm.response.to.be.header(\"x-powered-by\", \"Express\");\r",
+							"    pm.response.to.be.header(\"x-ratelimit-limit\", \"1000\");\r",
+							"    pm.response.to.be.header(\"vary\", \"Origin, X-HTTP-Method-Override, Accept-Encoding\");\r",
+							"    pm.response.to.be.header(\"access-control-allow-credentials\", \"true\");\r",
+							"    pm.response.to.be.header(\"cache-control\", \"no-cache\");\r",
+							"    pm.response.to.be.header(\"pragma\", \"no-cache\");\r",
+							"    pm.response.to.be.header(\"expires\", \"-1\");\r",
+							"    pm.response.to.be.header(\"access-control-expose-headers\", \"Location\");\r",
+							"    pm.response.to.be.header(\"location\", \"http://jsonplaceholder.typicode.com/posts/101\");\r",
+							"    pm.response.to.be.header(\"x-content-type-options\", \"nosniff\");\r",
+							"    pm.response.to.be.header(\"via\", \"1.1 vegur\");\r",
+							"    pm.response.to.be.header(\"CF-Cache-Status\", \"DYNAMIC\");\r",
+							"    pm.response.to.be.header(\"Expect-CT\", \"max-age=604800, report-uri=\\\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\\\"\");\r",
+							"    pm.response.to.be.header(\"NEL\", \"{\\\"success_fraction\\\":0,\\\"report_to\\\":\\\"cf-nel\\\",\\\"max_age\\\":604800}\");\r",
+							"    pm.response.to.be.header(\"Server\", \"cloudflare\");\r",
+							"    pm.response.to.be.header(\"alt-svc\", \"h3=\\\":443\\\"; ma=86400, h3-29=\\\":443\\\"; ma=86400, h3-28=\\\":443\\\"; ma=86400, h3-27=\\\":443\\\"; ma=86400\");\r",
+							"});\r",
+							"pm.test(\"Verifying the dynamic response headers\", function(){\r",
+							"    /*For some of the headers below the data changes a lot and what's really expected to be returned isn't defined. Thus, I set only the name of these headers \r",
+							"    being checked for now due to time restrictions. Regarding the header of Date, I believe what was left to do  was only convert the assertion to the same data type*/\r",
+							"\r",
+							"    //pm.response.to.be.header(\"Date\", today);\r",
+							"    pm.expect(pm.response.headers.get('Content-Length')).to.be.oneOf([\"66\", \"67\"]);\r",
+							"    pm.expect(pm.response.headers.get('x-ratelimit-remaining')).to.be.oneOf([\"991\", \"992\", \"993\", \"994\", \"995\", \"996\", \"997\", \"998\", \"999\"]);\r",
+							"    pm.response.to.have.header(\"x-ratelimit-reset\");\r",
+							"    pm.response.to.have.header(\"etag\");\r",
+							"    pm.response.to.have.header(\"Report-To\");\r",
+							"    pm.response.to.have.header(\"CF-RAY\");\r",
+							"});\r",
+							"pm.test(\"Verifying the response headers size\", function(){\r",
+							"    var headerSize=0;\r",
+							"    for (var count in responseHeaders) {\r",
+							"        if(responseHeaders.hasOwnProperty(count))\r",
+							"            headerSize += 1;\r",
+							"    }\r",
+							"    pm.expect(headerSize).to.eql(25);\r",
+							"});\r",
+							"\r",
+							"//Cleaning up\r",
+							"pm.environment.clear();"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"userId\", parseInt(Math.random() * 1000)); //just some rng. no specific reason\r",
+							"pm.environment.set(\"id\", 101);\r",
+							"pm.environment.set(\"title\", \"foo\");\r",
+							"pm.environment.set(\"body\", \"bar\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": {{userId}},\r\n  \"id\": {{id}},\r\n  \"title\": \"{{title}}\",\r\n  \"body\": \"{{body}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
